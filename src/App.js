@@ -1,5 +1,6 @@
+import kaboom from 'kaboom';
 import { useEffect, useRef } from 'react';
-import kaboom from '../node_modules/kaboom/dist/kaboom.mjs';
+// import kaboom from '../node_modules/kaboom/dist/kaboom.mjs';
 import explode from './sounds/explode.mp3';
 import hit from './sounds/hit.mp3';
 import OtherworldlyFoe from './sounds/OtherworldlyFoe.mp3';
@@ -21,6 +22,7 @@ function App() {
   // just make sure this is only run once on mount so your game state is not messed up
   useEffect(() => {
     document.title = 'TruckersForFreedom2022 - The Game!';
+    canvasRef.current.focus();
     const k = kaboom({
       // if you don't want to import to the global namespace
       global: false,
@@ -39,23 +41,23 @@ function App() {
       'gates',
       'morrison',
     ];
-    k.loadSprite('nehammer', nehammer);
-    k.loadSprite('macron', macron);
-    k.loadSprite('trudeau', trudeau);
-    k.loadSprite('vonDerLeyen', vonDerLeyen);
-    k.loadSprite('barroso', barroso);
-    k.loadSprite('schallenberg', schallenberg);
-    k.loadSprite('gates', gates);
-    k.loadSprite('morrison', morrison);
-    k.loadSprite('stars', stars);
+    k.loadSprite('nehammer', nehammer).catch(() => {});
+    k.loadSprite('macron', macron).catch(() => {});
+    k.loadSprite('trudeau', trudeau).catch(() => {});
+    k.loadSprite('vonDerLeyen', vonDerLeyen).catch(() => {});
+    k.loadSprite('barroso', barroso).catch(() => {});
+    k.loadSprite('schallenberg', schallenberg).catch(() => {});
+    k.loadSprite('gates', gates).catch(() => {});
+    k.loadSprite('morrison', morrison).catch(() => {});
+    k.loadSprite('stars', stars).catch(() => {});
 
     // k.loadBean();
-    k.loadSprite('bean', truckers);
+    k.loadSprite('bean', truckers).catch(() => {});
 
-    k.loadSound('hit', hit);
-    k.loadSound('shoot', shoot);
-    k.loadSound('explode', explode);
-    k.loadSound('OtherworldlyFoe', OtherworldlyFoe);
+    k.loadSound('hit', hit).catch(() => {});
+    k.loadSound('shoot', shoot).catch(() => {});
+    k.loadSound('explode', explode).catch(() => {});
+    k.loadSound('OtherworldlyFoe', OtherworldlyFoe).catch(() => {});
 
     k.scene('battle', () => {
       const BULLET_SPEED = 1200;
@@ -102,7 +104,7 @@ function App() {
       function addExplode(p, n, rad, size) {
         for (let i = 0; i < n; i++) {
           k.wait(k.rand(n * 0.1), () => {
-            for (let i = 0; i < 2; i++) {
+            for (let j = 0; j < 2; j++) {
               k.add([
                 k.pos(p.add(k.rand(k.vec2(-rad), k.vec2(rad)))),
                 k.rect(4, 4),
@@ -113,7 +115,7 @@ function App() {
                 k.origin('center'),
               ]);
             }
-          });
+          }).catch(() => {});
         }
       }
 
@@ -239,7 +241,7 @@ function App() {
         k.wait(1, () => {
           music.stop();
           k.go('battle');
-        });
+        }).catch(() => {});
       });
 
       k.onUpdate('bullet', (b) => {
@@ -272,7 +274,7 @@ function App() {
           'enemy',
           { speed: k.rand(TRASH_SPEED * 0.5, TRASH_SPEED * 1.5) },
         ]);
-        k.wait(insaneMode ? 0.1 : 0.3, spawnTrash);
+        k.wait(insaneMode ? 0.1 : 0.3, spawnTrash).catch(() => {});
       }
 
       const asshole = k.add([
@@ -295,6 +297,7 @@ function App() {
       });
 
       k.on('hurt', 'enemy', (e) => {
+        console.info(e);
         k.shake(1);
         k.play('hit', {
           detune: k.rand(-1200, 1200),
@@ -323,6 +326,7 @@ function App() {
       });
 
       asshole.onUpdate((p) => {
+        console.info(p);
         asshole.move(BOSS_SPEED * asshole.dir * (insaneMode ? 3 : 1), 0);
         if (asshole.dir === 1 && asshole.pos.x >= k.width() - 20) {
           asshole.dir = -1;
@@ -368,7 +372,10 @@ function App() {
       });
 
       k.add([
-        k.text('UP: insane mode', { width: k.width() / 2, size: 32 }),
+        k.text('UP: insane mode, LEFT/RIGHT: Move, SPACE: Fire', {
+          width: k.width() / 2,
+          size: 16,
+        }),
         k.origin('botleft'),
         k.pos(24, k.height() - 24),
       ]);
@@ -403,6 +410,6 @@ function App() {
     k.go('battle');
   }, []);
 
-  return <canvas ref={canvasRef}></canvas>;
+  return <canvas ref={canvasRef} />;
 }
 export default App;
