@@ -4,30 +4,29 @@ import explode from './sounds/explode.mp3';
 import hit from './sounds/hit.mp3';
 import OtherworldlyFoe from './sounds/OtherworldlyFoe.mp3';
 import shoot from './sounds/shoot.mp3';
-
-import nehammer from './svg/Nehammer.png';
-import macron from './svg/Macron.png';
-import trudeau from './svg/Trudeau.png';
-import gates from './svg/Gates.png';
-import schallenberg from './svg/Schallenberg.png';
-import vonDerLeyen from './svg/VonDerLeyen.png';
-import barroso from './svg/Barroso.png';
-import morrison from './svg/Morrison.png';
-import truckers from './svg/truckers.png';
 import stars from './sprites/pizza.png';
+import barroso from './svg/Barroso.png';
+import gates from './svg/Gates.png';
+import macron from './svg/Macron.png';
+import morrison from './svg/Morrison.png';
+import nehammer from './svg/Nehammer.png';
+import schallenberg from './svg/Schallenberg.png';
+import truckers from './svg/truckers.png';
+import trudeau from './svg/Trudeau.png';
+import vonDerLeyen from './svg/VonDerLeyen.png';
 
 function App() {
   const canvasRef = useRef(null);
 
   // just make sure this is only run once on mount so your game state is not messed up
   useEffect(() => {
-    document.title = "TruckersForFreedom2022 - The Game!"
+    document.title = 'TruckersForFreedom2022 - The Game!';
     const k = kaboom({
       // if you don't want to import to the global namespace
       global: false,
       // if you don't want kaboom to create a canvas and insert under document.body
       canvas: canvasRef.current,
-      background: [255,255,255]
+      background: [255, 255, 255],
     });
 
     const objs = [
@@ -40,18 +39,18 @@ function App() {
       'gates',
       'morrison',
     ];
-    k.loadSprite('nehammer', nehammer)
-    k.loadSprite('macron', macron)
-    k.loadSprite('trudeau', trudeau)
-    k.loadSprite('vonDerLeyen', vonDerLeyen)
-    k.loadSprite('barroso', barroso)
-    k.loadSprite('schallenberg', schallenberg)
-    k.loadSprite('gates', gates)
-    k.loadSprite('morrison', morrison)
-    k.loadSprite('stars', stars)
+    k.loadSprite('nehammer', nehammer);
+    k.loadSprite('macron', macron);
+    k.loadSprite('trudeau', trudeau);
+    k.loadSprite('vonDerLeyen', vonDerLeyen);
+    k.loadSprite('barroso', barroso);
+    k.loadSprite('schallenberg', schallenberg);
+    k.loadSprite('gates', gates);
+    k.loadSprite('morrison', morrison);
+    k.loadSprite('stars', stars);
 
     // k.loadBean();
-    k.loadSprite('bean', truckers)
+    k.loadSprite('bean', truckers);
 
     k.loadSound('hit', hit);
     k.loadSound('shoot', shoot);
@@ -63,7 +62,7 @@ function App() {
       const TRASH_SPEED = 120;
       const BOSS_SPEED = 48;
       const PLAYER_SPEED = 480;
-      const STAR_SPEED = 120;
+      // const STAR_SPEED = 120;
       const BOSS_HEALTH = 1000;
       const OBJ_HEALTH = 4;
 
@@ -105,7 +104,7 @@ function App() {
         k.pos(k.width() / 2, k.height() / 2),
         k.origin('center'),
         k.lifespan(1),
-          k.fixed(),
+        k.fixed(),
       ]);
 
       k.add([
@@ -251,9 +250,9 @@ function App() {
 
       k.onKeyPress('space', () => {
         spawnBullet(player.pos.add(16, 0));
-        setTimeout(()=>{
+        setTimeout(() => {
           spawnBullet(player.pos.add(0, -16));
-        }, 100)
+        }, 100);
         spawnBullet(player.pos.add(-16, 0));
         k.play('shoot', {
           volume: 0.3,
