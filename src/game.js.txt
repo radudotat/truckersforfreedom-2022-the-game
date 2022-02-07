@@ -1,4 +1,4 @@
-// TODO: document
+import kaboom from "kaboom"
 
 kaboom()
 
@@ -15,7 +15,7 @@ const objs = [
 ]
 
 for (const obj of objs) {
-  loadSprite(obj, `/sprites/${obj}.png`)
+  loadSprite(obj, `/sprites/${obj}.png`).then(r => {})
 }
 
 loadBean()
