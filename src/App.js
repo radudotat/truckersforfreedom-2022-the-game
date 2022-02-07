@@ -99,6 +99,39 @@ function App() {
         };
       }
 
+      function addExplode(p, n, rad, size) {
+        for (let i = 0; i < n; i++) {
+          k.wait(k.rand(n * 0.1), () => {
+            for (let i = 0; i < 2; i++) {
+              k.add([
+                k.pos(p.add(k.rand(k.vec2(-rad), k.vec2(rad)))),
+                k.rect(4, 4),
+                k.outline(4),
+                k.scale(1 * size, 1 * size),
+                k.lifespan(0.1),
+                grow(k.rand(48, 72) * size),
+                k.origin('center'),
+              ]);
+            }
+          });
+        }
+      }
+
+      function spawnBullet(p) {
+        k.add([
+          k.rect(12, 48),
+          k.area(),
+          k.pos(p),
+          k.origin('center'),
+          k.color(127, 127, 255),
+          k.outline(4),
+          k.move(k.UP, BULLET_SPEED),
+          k.cleanup(),
+          // strings here means a tag
+          'bullet',
+        ]);
+      }
+
       k.add([
         k.text('BOOSTERIZE', { size: 160 }),
         k.pos(k.width() / 2, k.height() / 2),
@@ -209,39 +242,6 @@ function App() {
         });
       });
 
-      function addExplode(p, n, rad, size) {
-        for (let i = 0; i < n; i++) {
-          k.wait(k.rand(n * 0.1), () => {
-            for (let i = 0; i < 2; i++) {
-              k.add([
-                k.pos(p.add(k.rand(k.vec2(-rad), k.vec2(rad)))),
-                k.rect(4, 4),
-                k.outline(4),
-                k.scale(1 * size, 1 * size),
-                k.lifespan(0.1),
-                grow(k.rand(48, 72) * size),
-                k.origin('center'),
-              ]);
-            }
-          });
-        }
-      }
-
-      function spawnBullet(p) {
-        k.add([
-          k.rect(12, 48),
-          k.area(),
-          k.pos(p),
-          k.origin('center'),
-          k.color(127, 127, 255),
-          k.outline(4),
-          k.move(k.UP, BULLET_SPEED),
-          k.cleanup(),
-          // strings here means a tag
-          'bullet',
-        ]);
-      }
-
       k.onUpdate('bullet', (b) => {
         if (insaneMode) {
           b.color = k.rand(k.rgb(0, 0, 0), k.rgb(255, 255, 255));
@@ -332,18 +332,6 @@ function App() {
         }
       });
 
-      asshole.onHurt(() => {
-        myocarditis.set(asshole.hp());
-      });
-
-      asshole.onDeath(() => {
-        music.stop();
-        k.go('win', {
-          time: timer.time,
-          asshole: assholeName,
-        });
-      });
-
       const myocarditis = k.add([
         k.rect(k.width(), 24),
         k.pos(0, 0),
@@ -357,6 +345,18 @@ function App() {
           },
         },
       ]);
+
+      asshole.onHurt(() => {
+        myocarditis.set(asshole.hp());
+      });
+
+      asshole.onDeath(() => {
+        music.stop();
+        k.go('win', {
+          time: timer.time,
+          asshole: assholeName,
+        });
+      });
 
       myocarditis.onUpdate(() => {
         if (myocarditis.flash) {
